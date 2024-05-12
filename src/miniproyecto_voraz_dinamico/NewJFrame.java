@@ -335,7 +335,7 @@ public void imprimir(){
     JOptionPane.showMessageDialog(null, texto, "TARIFAS / CIUDADES",-1);
 }
 public void ModificarArchivo(){
-      JOptionPane.showMessageDialog(this, "una vez termine de modificar los datos, POR FAVOR PRESIONE EL BOTON CARGAR DATOS","INFO",2);
+      
       String nombreArchivo = "Datos.txt";
         try {
             // Obtener la URL del archivo en el sistema de archivos del proyecto
@@ -355,7 +355,7 @@ public void ModificarArchivo(){
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
-        
+    JOptionPane.showMessageDialog(this, "una vez termine de modificar los datos, POR FAVOR PRESIONE EL BOTON CARGAR DATOS","INFO",2);
     dispose();
     new NewJFrame().setVisible(true);
 
