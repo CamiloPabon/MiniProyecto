@@ -1,0 +1,10 @@
+0 0 13 20 38 44 92 123 147 168 196
+1 n/a 0 6 26 31 69 101 123 139 170
+2 n/a n/a 0 18 25 63 95 117 133 164
+3 n/a n/a n/a 0 8 44 75 99 114 147
+4 n/a n/a n/a n/a 0 34 63 84 98 127
+5 n/a n/a n/a n/a n/a 0 33 56 74 104
+6 n/a n/a n/a n/a n/a n/a 0 20 34 62
+7 n/a n/a n/a n/a n/a n/a n/a 0 18 53
+8 n/a n/a n/a n/a n/a n/a n/a n/a 0 31
+9 n/a n/a n/a n/a n/a n/a n/a n/a n/a 0
