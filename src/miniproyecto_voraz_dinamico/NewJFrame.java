@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package miniproyecto_voraz_dinamico;
 
 import com.sun.tools.javac.Main;
@@ -20,6 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 public class NewJFrame extends javax.swing.JFrame {
+
     int numRows = 0;
     boolean valJtext = false;
     int numCols = 0;
@@ -319,7 +316,7 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         validacion();
-        
+
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -343,12 +340,12 @@ public class NewJFrame extends javax.swing.JFrame {
             evt.consume();
         }
     }//GEN-LAST:event_jTextField2KeyTyped
-    
+
     public void imprimir() {
         String texto = "";//se encarga de guardar el texto que se mostrara en el joption pane
 
         for (int i = 0; i < numRows; i++) {
-            texto = texto + "\n" + "ciudad: "+i+" ";//se hace para ver el numero de la ciudad al momento de imprimir los valores de transporte
+            texto = texto + "\n" + "ciudad: " + i + " ";//se hace para ver el numero de la ciudad al momento de imprimir los valores de transporte
             for (int j = 0; j < numCols; j++) {
                 if (matriz[i][j] != Integer.MAX_VALUE) {//se hace ya que en la matriz estan alacenados valores con valor infinito para descartar la ruta en el algoritmo
                     texto = texto + matriz[i][j] + "   ";
@@ -436,13 +433,13 @@ public class NewJFrame extends javax.swing.JFrame {
             if (jTextField2.getText().length() == 0) {
                 JOptionPane.showMessageDialog(null, "INGRESE EL # DE CIUDAD DONDE DESEA TERMINAR", "ERROR", 0);
             } else {
-                if ((Integer.parseInt(jTextField1.getText())) > numRows-1) {
+                if ((Integer.parseInt(jTextField1.getText())) > numRows - 1) {
                     JOptionPane.showMessageDialog(null, "INGRESE UN NUMERO MENOR O IGUAL A LA CANTIDAD DE CIUDADES", "ERROR", 0);
                 } else {
                     if (Integer.parseInt(jTextField1.getText()) >= Integer.parseInt(jTextField2.getText())) {
                         JOptionPane.showMessageDialog(null, "INGRESE UNA CIUDAD DE SALIDA MENOR A LA DE LLEGADA", "ERROR", 0);
                     } else {
-                        if ((Integer.parseInt(jTextField2.getText())) > numRows-1) {
+                        if ((Integer.parseInt(jTextField2.getText())) > numRows - 1) {
                             JOptionPane.showMessageDialog(null, "INGRESE UNA CIUDAD DE LLEGADA CON NUMERO MENOR O IGUAL A LA CANTIDAD DE CIUDADES", "ERROR", 0);
                         } else {
                             valJtext = true;//comprueba que se valido el jlabel
@@ -456,7 +453,7 @@ public class NewJFrame extends javax.swing.JFrame {
         if (valJtext) {//se hace solo si sew cumplieron las restricciones del jlabel
             if (jRadioButton1.isSelected()) {
                 voraz();
-            }else {
+            } else {
                 if (jRadioButton2.isSelected()) {
                     dinamico();
                 } else {
@@ -468,48 +465,80 @@ public class NewJFrame extends javax.swing.JFrame {
     }
 
     public void voraz() {
-        jTextField3.setText("Costo minimo del viaje: "+"voraz");
-    }
-
-    public void dinamico() {
-        
         int n = matriz.length; // Número de ciudades
         int origen = Integer.parseInt(jTextField1.getText()); // Ciudad de origen
         int destino = Integer.parseInt(jTextField2.getText()); // Ciudad de destino
-        
-        int[] dist = new int[n]; // Array para almacenar la distancia mínima desde el origen a cada ciudad
 
+        int[] dist = new int[n]; // Array para almacenar la distancia mínima desde el origen a cada ciudad
         boolean[] visitado = new boolean[n]; // Array para marcar las ciudades visitadas
-        
+
         // Inicializar todas las distancias como infinito, excepto la distancia al origen, que es 0
         Arrays.fill(dist, Integer.MAX_VALUE);
         dist[origen] = 0;
-        
+
         // PriorityQueue para seleccionar la ciudad con la distancia mínima no procesada
-        PriorityQueue<Integer> pq = new PriorityQueue<>(Comparator.comparingDouble(o -> dist[o]));
+        PriorityQueue<Integer> pq = new PriorityQueue<>(Comparator.comparingInt(o -> dist[o]));
         pq.add(origen);
 
-         // Procesar la cola de prioridades hasta que esté vacía
+        // Procesar la cola de prioridades hasta que esté vacía
         while (!pq.isEmpty()) {
             // Seleccionar la ciudad con la distancia mínima no procesada
             int u = pq.poll();
-            
+
             // Si la ciudad ya ha sido visitada, continuar con la siguiente
-            if (visitado[u]) continue;
+            if (visitado[u]) {
+                continue;
+            }
             visitado[u] = true;
-            
+
             // Relajar los bordes de la ciudad u
             for (int v = 0; v < n; v++) {
-                if(!visitado[v] && matriz[u][v]!=Integer.MAX_VALUE){
-                    int nuevaDist = dist[u]+matriz[u][v];
-                    if (nuevaDist < dist[v]){
+                if (!visitado[v] && matriz[u][v] != Integer.MAX_VALUE) {
+                    int nuevaDist = dist[u] + matriz[u][v];
+                    if (nuevaDist < dist[v]) {
                         dist[v] = nuevaDist;
                         pq.add(v);
                     }
                 }
             }
         }
-        jTextField3.setText("Costo minimo del viaje: "+dist[destino]);
+
+        jTextField3.setText("Costo minimo del viaje: " + (dist[destino] == Integer.MAX_VALUE ? "No existe ruta" : dist[destino]));
+    }
+
+    public void dinamico() {
+        int n = matriz.length; // Número de ciudades
+        int[][] dist = new int[n][n]; // Matriz de distancias
+
+        // Inicializar la matriz de distancias con los valores de la matriz de adyacencia
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i == j) {
+                    dist[i][j] = 0;
+                } else if (matriz[i][j] != 0) {
+                    dist[i][j] = matriz[i][j];
+                } else {
+                    dist[i][j] = Integer.MAX_VALUE;
+                }
+            }
+        }
+
+        // Aplicar el algoritmo de Floyd-Warshall
+        for (int k = 0; k < n; k++) {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (dist[i][k] != Integer.MAX_VALUE && dist[k][j] != Integer.MAX_VALUE && dist[i][k] + dist[k][j] < dist[i][j]) {
+                        dist[i][j] = dist[i][k] + dist[k][j];
+                    }
+                }
+            }
+        }
+
+        int origen = Integer.parseInt(jTextField1.getText()); // Ciudad de origen
+        int destino = Integer.parseInt(jTextField2.getText()); // Ciudad de destino
+        int resultado = dist[origen][destino];
+
+        jTextField3.setText("Costo minimo del viaje: " + (resultado == Integer.MAX_VALUE ? "No existe ruta" : resultado));
     }
 
     public static void main(String args[]) {
