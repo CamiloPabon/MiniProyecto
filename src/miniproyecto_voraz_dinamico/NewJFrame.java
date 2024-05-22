@@ -465,10 +465,11 @@ public class NewJFrame extends javax.swing.JFrame {
     }
 
     public void voraz() {
+        System.out.println("___________________________VORAZ___________________________");
         int n = matriz.length; // Número de ciudades
         int origen = Integer.parseInt(jTextField1.getText()); // Ciudad de origen
         int destino = Integer.parseInt(jTextField2.getText()); // Ciudad de destino
-
+        int iteraciones=0;
         int[] dist = new int[n]; // Array para almacenar la distancia mínima desde el origen a cada ciudad
         boolean[] visitado = new boolean[n]; // Array para marcar las ciudades visitadas
 
@@ -480,6 +481,8 @@ public class NewJFrame extends javax.swing.JFrame {
         PriorityQueue<Integer> pq = new PriorityQueue<>(Comparator.comparingInt(o -> dist[o]));
         pq.add(origen);
 
+         long startTime = System.nanoTime();
+        
         // Procesar la cola de prioridades hasta que esté vacía
         while (!pq.isEmpty()) {
             // Seleccionar la ciudad con la distancia mínima no procesada
@@ -496,20 +499,30 @@ public class NewJFrame extends javax.swing.JFrame {
                 if (!visitado[v] && matriz[u][v] != Integer.MAX_VALUE) {
                     int nuevaDist = dist[u] + matriz[u][v];
                     if (nuevaDist < dist[v]) {
+                        iteraciones++;
                         dist[v] = nuevaDist;
                         pq.add(v);
                     }
                 }
             }
         }
-
+         long endTime = System.nanoTime(); // Fin de medición de tiempo
+         long duration = (endTime - startTime) ; // Duración en milisegundos
+         System.out.println("Duracion del algoritmo en unidades de tiempo:"+duration);
+         System.out.println("iteraciones: "+iteraciones);
+         System.out.println("___________________________________________________________");
+         
         jTextField3.setText("Costo minimo del viaje: " + (dist[destino] == Integer.MAX_VALUE ? "No existe ruta" : dist[destino]));
     }
 
     public void dinamico() {
+        System.out.println("__________________________DINAMICO_________________________");
+        int iteraciones=0;
         int n = matriz.length; // Número de ciudades
         int[][] dist = new int[n][n]; // Matriz de distancias
-
+        
+        long startTime = System.nanoTime();
+        
         // Inicializar la matriz de distancias con los valores de la matriz de adyacencia
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
@@ -517,6 +530,7 @@ public class NewJFrame extends javax.swing.JFrame {
                     dist[i][j] = 0;
                 } else if (matriz[i][j] != 0) {
                     dist[i][j] = matriz[i][j];
+                    iteraciones++;
                 } else {
                     dist[i][j] = Integer.MAX_VALUE;
                 }
@@ -528,6 +542,7 @@ public class NewJFrame extends javax.swing.JFrame {
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < n; j++) {
                     if (dist[i][k] != Integer.MAX_VALUE && dist[k][j] != Integer.MAX_VALUE && dist[i][k] + dist[k][j] < dist[i][j]) {
+                        iteraciones++;
                         dist[i][j] = dist[i][k] + dist[k][j];
                     }
                 }
@@ -537,7 +552,13 @@ public class NewJFrame extends javax.swing.JFrame {
         int origen = Integer.parseInt(jTextField1.getText()); // Ciudad de origen
         int destino = Integer.parseInt(jTextField2.getText()); // Ciudad de destino
         int resultado = dist[origen][destino];
-
+        
+         long endTime = System.nanoTime(); // Fin de medición de tiempo
+         long duration = (endTime - startTime) ; // Duración en milisegundos
+         System.out.println("Duracion del algoritmo en unidades de tiempo:"+duration);
+         System.out.println("iteraciones: "+iteraciones);
+         System.out.println("___________________________________________________________");
+         
         jTextField3.setText("Costo minimo del viaje: " + (resultado == Integer.MAX_VALUE ? "No existe ruta" : resultado));
     }
 
